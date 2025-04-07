@@ -19,13 +19,14 @@ import {
   Award,
   Building,
   Calendar,
-  User,
+  User as UserIcon,
   Briefcase,
   Tag,
   Languages,
   Star,
   Hotel,
-  Activity
+  Activity,
+  Banknote
 } from "lucide-react";
 import { auth, db } from '../firebase';
 import { signOut, sendEmailVerification } from 'firebase/auth';
@@ -43,24 +44,16 @@ interface UserProfile {
   createdAt?: string;
   userType?: 'traveler' | 'guide' | 'hotel' | 'activity-provider';
   emailVerified?: boolean;
-  
-  // Traveler specific fields
   preferences?: string[];
-  
-  // Guide specific fields
   experience?: string;
   languages?: string[];
   bankDetails?: string;
-  
-  // Hotel specific fields
   businessInfo?: {
     businessName: string;
     type: string;
     location: string;
     description: string;
   };
-  
-  // Activity Provider specific fields
   activityName?: string;
   location?: string;
   description?: string;
@@ -80,30 +73,21 @@ const Profile = () => {
         const user = auth.currentUser;
         
         if (!user) {
-          toast({
-            title: "Authentication Required",
-            description: "Please sign up or log in to view your profile",
-            variant: "destructive",
-          });
           navigate('/signup/traveler');
           return;
         }
 
-        // Check email verification status
         setEmailVerified(user.emailVerified);
 
-        // Listen for email verification changes
         const unsubscribeEmailVerification = auth.onAuthStateChanged((user) => {
           if (user) {
             setEmailVerified(user.emailVerified);
           }
         });
 
-        // Try to get profile from localStorage first
         const storedProfile = localStorage.getItem('userProfile');
         if (storedProfile) {
           const parsedProfile = JSON.parse(storedProfile);
-          // Only use stored profile if it matches current user
           if (parsedProfile.email === user.email) {
             setUserProfile(parsedProfile);
             setLoading(false);
@@ -111,7 +95,6 @@ const Profile = () => {
           }
         }
 
-        // If not in localStorage or doesn't match, fetch from Firestore
         const collections = ['travelers', 'guides', 'hotels', 'activityProviders'];
         let userDoc = null;
 
@@ -135,16 +118,7 @@ const Profile = () => {
         if (userDoc) {
           localStorage.setItem('userProfile', JSON.stringify(userDoc));
           setUserProfile(userDoc as UserProfile);
-          toast({
-            title: "Profile Loaded",
-            description: "Welcome back!",
-          });
         } else {
-          toast({
-            title: "Profile Not Found",
-            description: "Please complete your registration",
-            variant: "destructive",
-          });
           navigate('/signup/traveler');
         }
 
@@ -153,11 +127,6 @@ const Profile = () => {
         };
       } catch (error) {
         console.error('Error fetching profile:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load profile. Please try logging in again.",
-          variant: "destructive",
-        });
         navigate('/login/traveler');
       } finally {
         setLoading(false);
@@ -262,7 +231,11 @@ const Profile = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h2 className="text-2xl font-bold">{userProfile.fullName}</h2>
+                      <h2 className="text-2xl font-bold">
+                        {userProfile.userType === 'activity-provider' 
+                          ? userProfile.activityName 
+                          : userProfile.fullName}
+                      </h2>
                       <p className="text-gray-600">@{userProfile.username}</p>
                       {!emailVerified && (
                         <p className="text-sm text-yellow-600 mt-1">
@@ -284,7 +257,7 @@ const Profile = () => {
               <Tabs defaultValue="profile" className="w-full">
                 <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="profile">Profile</TabsTrigger>
-                  <TabsTrigger value="preferences">Preferences</TabsTrigger>
+                  <TabsTrigger value="details">Details</TabsTrigger>
                   <TabsTrigger value="security">Security</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
                 </TabsList>
@@ -307,21 +280,21 @@ const Profile = () => {
                           <Phone className="h-5 w-5 text-gray-500" />
                           <div>
                             <p className="text-sm text-gray-500">Phone</p>
-                            <p className="font-medium">{userProfile.contactNumber}</p>
+                            <p className="font-medium">{userProfile.contactNumber || 'Not provided'}</p>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
                           <MapPin className="h-5 w-5 text-gray-500" />
                           <div>
                             <p className="text-sm text-gray-500">Address</p>
-                            <p className="font-medium">{userProfile.address}</p>
+                            <p className="font-medium">{userProfile.address || 'Not provided'}</p>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Globe className="h-5 w-5 text-gray-500" />
                           <div>
                             <p className="text-sm text-gray-500">Country</p>
-                            <p className="font-medium">{userProfile.country}</p>
+                            <p className="font-medium">{userProfile.country || 'Not provided'}</p>
                           </div>
                         </div>
                       </div>
@@ -329,122 +302,61 @@ const Profile = () => {
                   </Card>
                 </TabsContent>
 
-                <TabsContent value="preferences">
+                <TabsContent value="details">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Preferences & Details</CardTitle>
+                      <CardTitle>Business Details</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      {userProfile.userType === 'traveler' && (
-                        <div className="space-y-4">
-                          <div className="flex items-center space-x-2">
-                            <Heart className="h-5 w-5 text-gray-500" />
-                            <div>
-                              <p className="text-sm text-gray-500">Travel Preferences</p>
-                              <div className="flex flex-wrap gap-2 mt-1">
-                                {userProfile.preferences?.map((pref, index) => (
-                                  <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                                    {pref}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {userProfile.userType === 'guide' && (
-                        <div className="space-y-4">
-                          <div className="flex items-center space-x-2">
-                            <Award className="h-5 w-5 text-gray-500" />
-                            <div>
-                              <p className="text-sm text-gray-500">Experience</p>
-                              <p className="font-medium">{userProfile.experience}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Languages className="h-5 w-5 text-gray-500" />
-                            <div>
-                              <p className="text-sm text-gray-500">Languages</p>
-                              <div className="flex flex-wrap gap-2 mt-1">
-                                {userProfile.languages?.map((lang, index) => (
-                                  <span key={index} className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                                    {lang}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {userProfile.userType === 'hotel' && userProfile.businessInfo && (
-                        <div className="space-y-4">
-                          <div className="flex items-center space-x-2">
-                            <Hotel className="h-5 w-5 text-gray-500" />
-                            <div>
-                              <p className="text-sm text-gray-500">Business Name</p>
-                              <p className="font-medium">{userProfile.businessInfo.businessName}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Building className="h-5 w-5 text-gray-500" />
-                            <div>
-                              <p className="text-sm text-gray-500">Business Type</p>
-                              <p className="font-medium">{userProfile.businessInfo.type}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <MapPin className="h-5 w-5 text-gray-500" />
-                            <div>
-                              <p className="text-sm text-gray-500">Location</p>
-                              <p className="font-medium">{userProfile.businessInfo.location}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Briefcase className="h-5 w-5 text-gray-500" />
-                            <div>
-                              <p className="text-sm text-gray-500">Description</p>
-                              <p className="font-medium">{userProfile.businessInfo.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
                       {userProfile.userType === 'activity-provider' && (
-                        <div className="space-y-4">
-                          <div className="flex items-center space-x-2">
-                            <Activity className="h-5 w-5 text-gray-500" />
+                        <div className="space-y-6">
+                          <div className="flex items-start space-x-2">
+                            <Activity className="h-5 w-5 text-gray-500 mt-1" />
                             <div>
                               <p className="text-sm text-gray-500">Activity Name</p>
                               <p className="font-medium">{userProfile.activityName}</p>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <MapPin className="h-5 w-5 text-gray-500" />
+
+                          <div className="flex items-start space-x-2">
+                            <MapPin className="h-5 w-5 text-gray-500 mt-1" />
                             <div>
                               <p className="text-sm text-gray-500">Location</p>
                               <p className="font-medium">{userProfile.location}</p>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <Briefcase className="h-5 w-5 text-gray-500" />
+
+                          <div className="flex items-start space-x-2">
+                            <Briefcase className="h-5 w-5 text-gray-500 mt-1" />
                             <div>
                               <p className="text-sm text-gray-500">Description</p>
                               <p className="font-medium">{userProfile.description}</p>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <Tag className="h-5 w-5 text-gray-500" />
+
+                          <div className="flex items-start space-x-2">
+                            <Tag className="h-5 w-5 text-gray-500 mt-1" />
                             <div>
                               <p className="text-sm text-gray-500">Activity Types</p>
                               <div className="flex flex-wrap gap-2 mt-1">
                                 {userProfile.activityTypes?.map((type, index) => (
-                                  <span key={index} className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
+                                  <span 
+                                    key={index} 
+                                    className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm flex items-center"
+                                  >
+                                    <Activity className="h-4 w-4 mr-1" />
                                     {type}
                                   </span>
                                 ))}
                               </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start space-x-2">
+                            <Banknote className="h-5 w-5 text-gray-500 mt-1" />
+                            <div>
+                              <p className="text-sm text-gray-500">Bank Details</p>
+                              <p className="font-medium">{userProfile.bankDetails}</p>
                             </div>
                           </div>
                         </div>
@@ -475,13 +387,6 @@ const Profile = () => {
                             </Button>
                           )}
                         </div>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="font-medium">Change Password</h3>
-                            <p className="text-sm text-gray-500">Update your password</p>
-                          </div>
-                          <Button variant="outline">Change Password</Button>
-                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -490,7 +395,7 @@ const Profile = () => {
                 <TabsContent value="activity">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Recent Activity</CardTitle>
+                      <CardTitle>Account Activity</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">

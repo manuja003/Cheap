@@ -48,7 +48,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="hero-section mb-12">
-        <div className="container mx-auto px-4 py-24 text-center text-white">
+        <div className="container mx-auto px-4 py-24 text-center text-Black">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 fade-in">
             Share Your Journey
           </h1>
