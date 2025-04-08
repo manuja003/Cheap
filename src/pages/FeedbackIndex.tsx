@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FeedbackForm } from "@/components/FeedbackForm";
 import { FeedbackList } from "@/components/FeedbackList";
+import Navbar from "@/components/Navbar";
 
 interface Feedback {
   id: number;
@@ -46,42 +47,62 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      <div className="hero-section mb-12">
-        <div className="container mx-auto px-4 py-24 text-center text-white">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 fade-in">
-            Share Your Journey
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 fade-in">
-            Help others plan their perfect trip with your valuable feedback
-          </p>
+    <>
+      <Navbar />
+      <div className="min-h-screen relative">
+        {/* Full page background with overlay */}
+        <div 
+          className="fixed inset-0 bg-cover bg-center z-0"
+          style={{
+            backgroundImage: 'url("https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-1.2.1&auto=format&fit=crop&w=2560&q=80")',
+          }}
+        >
+          <div className="absolute inset-0 bg-black bg-opacity-50" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 pt-16">
+          <div className="hero-section">
+            <div className="container mx-auto px-4 py-20 text-center text-white">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 fade-in">
+                Share Your Journey
+              </h1>
+              <p className="text-xl md:text-2xl mb-8 fade-in">
+                Help others plan their perfect trip with your valuable feedback
+              </p>
+            </div>
+          </div>
+
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="bg-white/90 rounded-lg shadow-xl p-8 mb-12">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold mb-4 text-gray-800">Submit Your Feedback</h2>
+                  <p className="text-gray-600">
+                    Your feedback helps us improve and helps other travelers make better decisions
+                  </p>
+                </div>
+
+                <div className="mb-16">
+                  <FeedbackForm onSubmit={handleSubmitFeedback} />
+                </div>
+              </div>
+
+              <div className="bg-white/90 rounded-lg shadow-xl p-8">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold mb-4 text-gray-800">Recent Feedback</h2>
+                  <p className="text-gray-600">
+                    See what other travelers are saying about their experiences
+                  </p>
+                </div>
+
+                <FeedbackList feedbacks={feedbacks} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">x
-            <h2 className="text-3xl font-bold mb-4">Submit Your Feedback</h2>
-            <p className="text-gray-600">
-              Your feedback helps us improve and helps other travelers make better decisions
-            </p>
-          </div>
-
-          <div className="mb-16">
-            <FeedbackForm onSubmit={handleSubmitFeedback} />
-          </div>
-
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Recent Feedback</h2>
-            <p className="text-gray-600">
-              See what other travelers are saying about their experiences
-            </p>
-          </div>
-
-          <FeedbackList feedbacks={feedbacks} />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

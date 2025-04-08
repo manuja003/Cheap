@@ -19,13 +19,13 @@ const AboutUs = () => {
       description: "Experienced project manager ensuring smooth development and delivery of features."
     },
     {
-      name: "Venuri KIsara",
+      name: "Venuri Kisara",
       role: "Frontend Developer",
       image: kisara,
       description: "UI/UX specialist focused on creating intuitive and responsive user interfaces."
     },
     {
-      name: "Sinega",
+      name: "Sinega Rajendran",
       role: "Frontend Developer",
       image: sinega,
       description: "UI/UX specialist focused on creating intuitive and responsive user interfaces."
