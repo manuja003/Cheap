@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Navbar from "@/components/Navbar";
 
 const destinations = [
   {
@@ -180,72 +181,75 @@ const Destinations = () => {
     : destinations.filter(dest => dest.category === filter);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-secondary to-background">
-      <div className="container mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-gradient-to-b from-secondary to-background pt-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-4xl font-bold mb-4">
+                Explore Southern Sri Lanka
+              </h1>
+              <p className="text-muted-foreground text-lg">
+                Embark on an unforgettable journey through Southern Sri Lanka, where golden beaches meet turquoise waters, ancient temples whisper tales of history, and lush national parks offer breathtaking encounters with wildlife. From the colonial charm of Galle Fort to the serene beauty of Tangalle and the adventure-filled safaris of Yala, this region is a perfect blend of relaxation, culture, and exploration. Whether you're surfing in Hiriketiya, whale watching in Mirissa, or indulging in the rich flavors of Sri Lankan cuisine, every moment in Southern Sri Lanka is a treasure waiting to be discovered.
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="mb-8 flex flex-wrap justify-center gap-3">
+            <FilterButton 
+              isActive={filter === "All"} 
+              onClick={() => setFilter("All")}
+            >
+              All
+            </FilterButton>
+            <FilterButton 
+              isActive={filter === "Beaches"} 
+              onClick={() => setFilter("Beaches")}
+            >
+              Beaches
+            </FilterButton>
+            <FilterButton 
+              isActive={filter === "Historical"} 
+              onClick={() => setFilter("Historical")}
+            >
+              Historical
+            </FilterButton>
+            <FilterButton 
+              isActive={filter === "Wildlife"} 
+              onClick={() => setFilter("Wildlife")}
+            >
+              Wildlife
+            </FilterButton>
+            <FilterButton 
+              isActive={filter === "Adventure"} 
+              onClick={() => setFilter("Adventure")}
+            >
+              Adventure & Unique Experiences
+            </FilterButton>
+          </div>
+
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, staggerChildren: 0.1 }}
           >
-            <h1 className="text-4xl font-bold mb-4">
-              Explore Southern Sri Lanka
-            </h1>
-            <p className="text-muted-foreground text-lg">
-            Embark on an unforgettable journey through Southern Sri Lanka, where golden beaches meet turquoise waters, ancient temples whisper tales of history, and lush national parks offer breathtaking encounters with wildlife. From the colonial charm of Galle Fort to the serene beauty of Tangalle and the adventure-filled safaris of Yala, this region is a perfect blend of relaxation, culture, and exploration. Whether you're surfing in Hiriketiya, whale watching in Mirissa, or indulging in the rich flavors of Sri Lankan cuisine, every moment in Southern Sri Lanka is a treasure waiting to be discovered.
-            </p>
+            {filteredDestinations.map((destination, index) => (
+              <DestinationCard 
+                key={destination.id} 
+                destination={destination} 
+                index={index}
+              />
+            ))}
           </motion.div>
         </div>
-
-        <div className="mb-8 flex flex-wrap justify-center gap-3">
-          <FilterButton 
-            isActive={filter === "All"} 
-            onClick={() => setFilter("All")}
-          >
-            All
-          </FilterButton>
-          <FilterButton 
-            isActive={filter === "Beaches"} 
-            onClick={() => setFilter("Beaches")}
-          >
-            Beaches
-          </FilterButton>
-          <FilterButton 
-            isActive={filter === "Historical"} 
-            onClick={() => setFilter("Historical")}
-          >
-            Historical
-          </FilterButton>
-          <FilterButton 
-            isActive={filter === "Wildlife"} 
-            onClick={() => setFilter("Wildlife")}
-          >
-            Wildlife
-          </FilterButton>
-          <FilterButton 
-            isActive={filter === "Adventure"} 
-            onClick={() => setFilter("Adventure")}
-          >
-            Adventure & Unique Experiences
-          </FilterButton>
-        </div>
-
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, staggerChildren: 0.1 }}
-        >
-          {filteredDestinations.map((destination, index) => (
-            <DestinationCard 
-              key={destination.id} 
-              destination={destination} 
-              index={index}
-            />
-          ))}
-        </motion.div>
       </div>
-    </div>
+    </>
   );
 };
 
