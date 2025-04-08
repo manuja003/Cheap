@@ -146,7 +146,7 @@ const Navbar = () => {
                 </div>
               </div>
               <Link
-                to="/trip-planne"
+                to="https://4c83-34-48-19-102.ngrok-free.app/"
                 className="block w-full bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors mt-4"
               >
                 Plan My Trip
