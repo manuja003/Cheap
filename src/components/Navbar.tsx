@@ -39,6 +39,15 @@ const Navbar = () => {
             <NavLink to="/about">About Us</NavLink>
             <NavLink to="/contact">Contact</NavLink>
 
+            <a
+              href="https://cheapchasertravel.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-700 hover:text-primary transition-colors relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
+            >
+              Need Consultation?
+            </a>
+
             {/* Login Menu */}
             <div className="relative">
               <button
@@ -87,7 +96,7 @@ const Navbar = () => {
             </div>
 
             <Link
-              to="/trip-planner"
+              to="https://4c83-34-48-19-102.ngrok-free.app/"
               className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors"
             >
               Plan My Trip
@@ -137,7 +146,7 @@ const Navbar = () => {
                 </div>
               </div>
               <Link
-                to="/trip-planner"
+                to="/trip-planne"
                 className="block w-full bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors mt-4"
               >
                 Plan My Trip
