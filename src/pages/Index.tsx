@@ -63,7 +63,7 @@ const Index = () => {
             Experience the beauty of paradise on a budget
           </p>
           <button 
-            onClick={() => window.location.href = 'https://4c83-34-48-19-102.ngrok-free.app/'}
+            onClick={() => window.location.href = 'https://56dd-34-48-19-102.ngrok-free.app/'}
             className="bg-primary text-white px-8 py-3 rounded-full text-lg font-medium hover:bg-primary/90 transition-colors animate-float inline-block"
           >
             Plan My Trip
