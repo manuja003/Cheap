@@ -34,12 +34,10 @@ const Navbar = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <NavLink to="/destinations">Destinations</NavLink>
-            <NavLink to="/about">About Us</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
             <NavLink to="/activity">Activities</NavLink>
             <NavLink to="/gallery">Gallery</NavLink>
-
-
+            <NavLink to="/about">About Us</NavLink>
+            <NavLink to="/contact">Contact</NavLink>
 
             {/* Login Menu */}
             <div className="relative">
@@ -89,7 +87,7 @@ const Navbar = () => {
             </div>
 
             <Link
-              to="https://9521-34-23-80-27.ngrok-free.app/"
+              to="/trip-planner"
               className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors"
             >
               Plan My Trip
@@ -118,10 +116,10 @@ const Navbar = () => {
           <div className="md:hidden bg-white/95 backdrop-blur-md">
             <div className="px-2 pt-2 pb-3 space-y-1">
               <MobileNavLink to="/destinations">Destinations</MobileNavLink>
+              <MobileNavLink to="/activity">Activities</MobileNavLink>
+              <MobileNavLink to="/gallery">Gallery</MobileNavLink>
               <MobileNavLink to="/about">About Us</MobileNavLink>
-              <NavLink to="/contact">Contact</NavLink>
-              <NavLink to="/activity">Activities</NavLink>
-              <NavLink to="/gallery">Gallery</NavLink>
+              <MobileNavLink to="/contact">Contact</MobileNavLink>
               <div className="pt-4 pb-3 border-t border-gray-200">
                 <div className="px-2 space-y-1">
                   <p className="px-3 py-2 text-sm font-medium text-gray-500">Login as:</p>

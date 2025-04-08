@@ -187,12 +187,48 @@ const Login = () => {
 
     try {
       await setPersistence(auth, browserLocalPersistence);
-      await signInWithPopup(auth, new GoogleAuthProvider());
-      toast({ title: "Login Successful", description: "You are now signed in with Google." });
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const user = result.user;
+
+      // Check if user exists in the correct collection based on userType
+      const q = query(collection(db, userType + "s"), where("email", "==", user.email));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        // User doesn't exist in this role
+        toast({ 
+          title: "Access Denied", 
+          description: `You are not registered as a ${formattedUserType}. Please sign up first.`,
+          variant: "destructive" 
+        });
+        await auth.signOut(); // Sign out the user
+        return;
+      }
+
+      // User exists in correct role
+      const userProfile = querySnapshot.docs[0].data();
+      localStorage.setItem("userProfile", JSON.stringify(userProfile));
+      
+      toast({ 
+        title: "Login Successful", 
+        description: "You are now signed in with Google." 
+      });
       navigate("/profile");
     } catch (err: any) {
-      setError(err.message);
-      toast({ title: "Login Failed", description: err.message, variant: "destructive" });
+      console.error("Google login error:", err);
+      let errorMessage = "Failed to sign in with Google.";
+      
+      if (err.code === 'auth/popup-closed-by-user') {
+        errorMessage = "Login cancelled. Please try again.";
+      } else if (err.code === 'auth/popup-blocked') {
+        errorMessage = "Login popup was blocked. Please allow popups and try again.";
+      }
+      
+      toast({ 
+        title: "Login Failed", 
+        description: errorMessage, 
+        variant: "destructive" 
+      });
     }
   };
 

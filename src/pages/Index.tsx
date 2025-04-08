@@ -6,9 +6,12 @@ import { MapPin, Calendar, DollarSign } from 'lucide-react';
 import DirectBooking from '../components/DirectBooking';
 import Feedback from '../components/Feedback';
 import homeImage from '../images/home2.jpeg';
-import Sigiriya from '../images/sigiriya.jpg';
-import Ella from '../images/ella.jpg';
+import unawatuna from '../images/Unawatuna.jpg';
 import Galle from '../images/galle.jpg';
+import kanneliya from '../images/kanneliya.jpg';
+import perhara from '../images/perahara.jpg';
+import avurudu from '../images/avurudu.jpg';
+import litfes from '../images/litfes.jpg';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -120,23 +123,59 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <DestinationCard
-              image={Sigiriya}
-              title="Sigiriya"
-              description="Ancient palace and fortress complex"
-            />
-            <DestinationCard
-              image={Ella}
-              title="Ella"
-              description="Scenic mountain village and hiking trails"
-            />
-            <DestinationCard
               image={Galle}
-              title="Galle"
-              description="Historic coastal fort and colonial architecture"
+              title="Galle Fort"
+              description="A UNESCO World Heritage Site built by the Portuguese and later expanded by the Dutch. It features colonial architecture, cobbled streets, and stunning sea views."
+            />
+            <DestinationCard
+              image={unawatuna}
+              title="Unawatuna Beach"
+              description="A famous crescent-shaped beach with golden sand, turquoise waters, and great snorkeling and diving spots.                                                         "
+            />
+            <DestinationCard
+              image={kanneliya}
+              title="Kanneliya Forest Reserve"
+              description="A biodiversity hotspot with waterfalls, hiking trails, and endemic species."
             />
           </div>
         </div>
       </section>
+
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 animate-on-scroll opacity-0">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Seasonal Festivals
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+            Galle hosts several vibrant festivals throughout the year, celebrating its rich history, culture, and arts. Here are some of the most popular festivals in Galle.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <FestivalCard
+              image={litfes}
+              title="Galle Literary Festival"
+              time='January/February'
+              description="One of the most prestigious literary events in South Asia, the Galle Literary Festival attracts writers, poets, and intellectuals from around the world. The event features book readings, discussions, workshops, and cultural performances set within the historic Galle Fort."
+            />
+            <FestivalCard
+              image={avurudu}
+              title="Sinhala & Tamil New Year (Avurudu Festival)"
+              time='April 13–14'
+              description="A major Sri Lankan festival marking the traditional New Year, featuring traditional games, feasting, and cultural rituals. Families in Galle celebrate with oil lamp lighting, sweetmeats, and fireworks. "
+            />
+            <FestivalCard
+              image={perhara}
+              title="Unawatuna Perahera"
+              time='June/July (Poson Poya period)'
+              description="A religious festival held at various Buddhist temples in and around Galle, celebrating the sacred Esala Poya. The festival includes vibrant processions, traditional dances, and rituals honoring the Buddha’s teachings."
+            />
+          </div>
+        </div>
+      </section>
+
+
 
       <Footer />
     </div>
@@ -164,6 +203,23 @@ const DestinationCard = ({ image, title, description }: { image: string; title: 
     </div>
     <div className="p-6 bg-white">
       <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+    </div>
+  </div>
+);
+
+const FestivalCard = ({ image, title, time, description }: { image: string; title: string; time:string; description: string }) => (
+  <div className="group rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow animate-on-scroll opacity-0">
+    <div className="relative h-64 overflow-hidden">
+      <img
+        src={image}
+        alt={title}
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+      />
+    </div>
+    <div className="p-6 bg-white">
+      <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
+      <h3 className="text-base font-semibold text-gray-500 mb-2">{time}</h3>
       <p className="text-gray-600">{description}</p>
     </div>
   </div>
