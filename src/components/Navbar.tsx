@@ -89,7 +89,7 @@ const Navbar = () => {
             </div>
 
             <Link
-              to="/trip-planner"
+              to="https://9521-34-23-80-27.ngrok-free.app/"
               className="bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition-colors"
             >
               Plan My Trip
